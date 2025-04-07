@@ -1,6 +1,6 @@
 import requests
 from app.tool.search.base import WebSearchEngine
-URL='you searxng address'
+from app.config import config
 
 
 class SearxngSearchEngine(WebSearchEngine):
@@ -22,18 +22,28 @@ class SearxngSearchEngine(WebSearchEngine):
             "theme": "simple",
             "image_proxy": 0,
         }
-        response = requests.get(
-            URL,
-            headers={
-                "User-Agent": "Open Manus (https://github.com/mannaandpoem/OpenManus)",
-                "Accept": "text/html",
-                "Accept-Encoding": "gzip, deflate",
-                "Accept-Language": "zh-CN,zh;q=0.9",
-                "Connection": "keep-alive",
-            },
-            params=params,
-        )
-
-        json_response = response.json()
-        results = json_response.get("results", [])
-        return results
+        
+        try:
+            response = requests.get(
+                config.search_config.searxng_url,
+                headers={
+                    "User-Agent": "Open Manus (https://github.com/mannaandpoem/OpenManus)",
+                    "Accept": "text/html",
+                    "Accept-Encoding": "gzip, deflate",
+                    "Accept-Language": "zh-CN,zh;q=0.9",
+                    "Connection": "keep-alive",
+                },
+                params=params,
+                timeout=10  # Added timeout
+            )
+            response.raise_for_status()  # Raises HTTPError for 4XX/5XX responses
+            
+            try:
+                json_response = response.json()
+                results = json_response.get("results", [])
+                return results
+            except ValueError as e:
+                raise ValueError(f"Failed to parse JSON response: {str(e)}")
+                
+        except requests.exceptions.RequestException as e:
+            raise ConnectionError(f"Search request failed: {str(e)}")
