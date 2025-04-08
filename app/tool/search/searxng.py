@@ -48,16 +48,14 @@ class SearxngSearchEngine(WebSearchEngine):
         except requests.exceptions.RequestException as e:
             raise ConnectionError(f"Search request failed: {str(e)}")
 
-
+#test
 if __name__ == "__main__":
-    # 测试搜索功能
     search_engine = SearxngSearchEngine()
     try:
         results = search_engine.perform_search("Python", num_results=5)
-        print(f"搜索成功，获取到 {len(results)} 条结果:")
         for i, result in enumerate(results, 1):
-            print(f"{i}. {result.get('title', '无标题')}")
-            print(f"   URL: {result.get('url', '无URL')}")
-            print(f"   {result.get('content', '无内容摘要')[:100]}...")
+            print(f"{i}. {result.get('title', 'None')}")
+            print(f"   URL: {result.get('url', 'None')}")
+            print(f"   {result.get('content', 'None')[:100]}...")
     except Exception as e:
-        print(f"搜索出错: {str(e)}")
+        print(f"search error: {str(e)}")
