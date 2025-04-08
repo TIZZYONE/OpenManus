@@ -12,5 +12,5 @@ __all__ = [
     "DuckDuckGoSearchEngine",
     "GoogleSearchEngine",
     "BingSearchEngine",
-    "SearxngSearchEngine"
+    "SearxngSearchEngine",
 ]

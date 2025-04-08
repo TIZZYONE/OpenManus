@@ -1,11 +1,11 @@
 import requests
-from app.tool.search.base import WebSearchEngine
+
 from app.config import config
+from app.tool.search.base import WebSearchEngine
 
 
 class SearxngSearchEngine(WebSearchEngine):
-
-    def perform_search(self,query: str,num_results: int = 10,*args, **kwargs):
+    def perform_search(self, query: str, num_results: int = 10, *args, **kwargs):
         """Searxng search engine."""
         language = kwargs.get("language", "en-US")
         safesearch = kwargs.get("safesearch", "1")
@@ -22,7 +22,7 @@ class SearxngSearchEngine(WebSearchEngine):
             "theme": "simple",
             "image_proxy": 0,
         }
-        
+
         try:
             response = requests.get(
                 config.search_config.searxng_url,
@@ -34,21 +34,22 @@ class SearxngSearchEngine(WebSearchEngine):
                     "Connection": "keep-alive",
                 },
                 params=params,
-                timeout=10  # Added timeout
+                timeout=10,  # Added timeout
             )
             response.raise_for_status()  # Raises HTTPError for 4XX/5XX responses
-            
+
             try:
                 json_response = response.json()
                 results = json_response.get("results", [])
                 return results
             except ValueError as e:
                 raise ValueError(f"Failed to parse JSON response: {str(e)}")
-                
+
         except requests.exceptions.RequestException as e:
             raise ConnectionError(f"Search request failed: {str(e)}")
 
-#test
+
+# test
 if __name__ == "__main__":
     search_engine = SearxngSearchEngine()
     try:
