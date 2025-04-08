@@ -37,7 +37,7 @@ class ProxySettings(BaseModel):
 
 class SearchSettings(BaseModel):
     engine: str = Field(default="Google", description="Search engine the llm to use")
-    searxng_url: Optional[str] = Field( 
+    searxng_url: Optional[str] = Field(
         None, description="URL of Searxng instance if engine is Searxng"
     )
     fallback_engines: List[str] = Field(
